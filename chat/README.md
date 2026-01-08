@@ -1,16 +1,6 @@
-## Design
-Supervisor has children of 2 dynamic supervisors: Chat.ProxyServerSupervisor and Chat.Server.
-Chat.ProxyServerSupervisor creates and monitors ProxyServer on demand.
-Chat.Server creates and monitors Proxy on demand. 
+# TCP Chat Application (Elixir)
 
-2 ets tables. :chat_group_count and :chat_groups
-:chat_group_count is for group name and number of group members 
-:chat_groups is for group name and client's pid 
-
-1 registry. Nickname is associated with proxy's pid. 
-
-ProxyServer is acceptor. It can listen to many different ports(default 6666).
-Proxy is created when new client is accepted(one proxy per one clinet).
+A multi-client TCP chat server where user connects via TCP, register nickname, list users, send direct messages and broadcasts messages to groups.
 
 ## How to start the application
 Start mix project
@@ -28,6 +18,26 @@ Start clients
 cd chat_client
 elixir client.exs                : default localhost 6666
 elixir client.exs localhost 4444 : connect to localhost 4444
+
+## Commands
+1. /NCK <nickname>: register a nickname. 
+2. /LST: show list of registered nicknames. 
+3. /MSG <recipients> <message>: send message to recipients. 
+4. /GRP <groupname> <users>: register a group for registered users.  
+
+## Design
+Supervisor has children of 2 dynamic supervisors: Chat.ProxyServerSupervisor and Chat.Server.
+Chat.ProxyServerSupervisor creates and monitors ProxyServer on demand.
+Chat.Server creates and monitors Proxy on demand. 
+
+2 ets tables. :chat_group_count and :chat_groups
+:chat_group_count is for group name and number of group members 
+:chat_groups is for group name and client's pid 
+
+1 registry. Nickname is associated with proxy's pid. 
+
+ProxyServer is acceptor. It can listen to many different ports(default 6666).
+Proxy is created when new client is accepted(one proxy per one clinet).
 
 ## Test cases
 Test cases for /MSG and /GRP (/LST, /NCK are straightforward)
